@@ -3,14 +3,13 @@
   "functions": {
     "api/index.php": {
       "runtime": "vercel-php@0.9.0",
-      "memory": 1024,
       "maxDuration": 60
     }
   },
   "routes": [
     {
-      "src": "/public/(.*)",
-      "dest": "/public/$1"
+      "src": "/public/(css|js|assets|uploads)/(.*)",
+      "dest": "/public/$1/$2"
     },
     {
       "src": "/(.*)",
