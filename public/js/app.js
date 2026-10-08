@@ -3,24 +3,7 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Sidebar Toggle on Mobile
-    const sidebarToggle = document.getElementById('sidebarToggle');
-    const appSidebar = document.getElementById('appSidebar');
-
-    if (sidebarToggle && appSidebar) {
-        sidebarToggle.addEventListener('click', (e) => {
-            e.stopPropagation();
-            appSidebar.classList.toggle('open');
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!appSidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
-                appSidebar.classList.remove('open');
-            }
-        });
-    }
-
-    // 2. User Menu Dropdown Toggle
+    // 1. User Menu Dropdown Toggle
     const userMenuBtn = document.getElementById('userMenuBtn');
     const userMenuDropdown = document.getElementById('userMenuDropdown');
 
@@ -37,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 3. Global Search Input
+    // 2. Global Search Input Navigation on Enter
     const globalSearch = document.getElementById('globalSearchInput');
     if (globalSearch) {
         globalSearch.addEventListener('keydown', (e) => {
@@ -49,49 +32,29 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Toast Notifications
-function showToast(message, type = 'success') {
-    const container = document.getElementById('toastContainer');
-    if (!container) return;
-
-    const toast = document.createElement('div');
-    toast.className = `alert alert-${type === 'error' ? 'danger' : type}`;
-    toast.style.cssText = `
-        min-width: 280px;
-        max-width: 400px;
-        box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
-        margin: 0;
-        animation: slideIn 0.3s ease;
-    `;
-
-    const icon = type === 'success' ? 'fa-check-circle' : (type === 'error' ? 'fa-exclamation-triangle' : 'fa-info-circle');
-    toast.innerHTML = `
-        <div class="alert-icon"><i class="fas ${icon}"></i></div>
-        <div class="alert-content">${message}</div>
-        <button type="button" class="alert-close" onclick="this.parentElement.remove()">&times;</button>
-    `;
-
-    container.appendChild(toast);
-
-    setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.transform = 'translateY(10px)';
-        toast.style.transition = 'all 0.3s ease';
-        setTimeout(() => toast.remove(), 300);
-    }, 4000);
-}
-
-// Copy to Clipboard Utility
+// 3. Reliable Copy to Clipboard Utility (Uses modern UI toast)
 function copyToClipboard(text, successMsg = 'Copied to clipboard!') {
     if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(text).then(() => showToast(successMsg, 'success'));
+        navigator.clipboard.writeText(text).then(() => {
+            if (window.showToast) window.showToast(successMsg, 'success');
+        }).catch(() => fallbackCopy(text, successMsg));
     } else {
-        const input = document.createElement('input');
-        input.value = text;
-        document.body.appendChild(input);
-        input.select();
-        document.execCommand('copy');
-        document.body.removeChild(input);
-        showToast(successMsg, 'success');
+        fallbackCopy(text, successMsg);
     }
+}
+
+function fallbackCopy(text, successMsg) {
+    const input = document.createElement('input');
+    input.value = text;
+    input.style.position = 'fixed';
+    input.style.opacity = '0';
+    document.body.appendChild(input);
+    input.select();
+    try {
+        document.execCommand('copy');
+        if (window.showToast) window.showToast(successMsg, 'success');
+    } catch (e) {
+        if (window.showToast) window.showToast('Failed to copy', 'error');
+    }
+    document.body.removeChild(input);
 }

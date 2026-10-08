@@ -272,11 +272,11 @@ window.showToast = function(message, type = 'success', duration = 3000) {
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
 
-    const icon = type === 'success' ? 'fa-check-circle' : (type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle');
+    const icon = type === 'success' ? 'fa-circle-check' : (type === 'error' ? 'fa-circle-exclamation' : 'fa-circle-info');
     toast.innerHTML = `
         <div class="toast-icon"><i class="fas ${icon}"></i></div>
         <div class="toast-message">${message}</div>
-        <button type="button" class="btn-ghost btn-sm" style="padding:2px 6px; color:var(--text-muted); cursor:pointer;" onclick="this.closest('.toast').remove()">&times;</button>
+        <button type="button" class="toast-close-btn" aria-label="Close" onclick="this.closest('.toast').remove()">&times;</button>
         <div class="toast-progress"></div>
     `;
 
