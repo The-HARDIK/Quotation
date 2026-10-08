@@ -4,6 +4,7 @@
  */
 
 $root = dirname(__DIR__);
+chdir($root);
 $uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
 
 // Clean up URI
