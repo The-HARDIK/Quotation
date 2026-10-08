@@ -158,12 +158,12 @@ class QuotationBuilder {
 
     bindZoom() {
         document.getElementById('zoomInBtn')?.addEventListener('click', () => {
-            this.zoomLevel = Math.min(1.5, this.zoomLevel + 0.1);
+            this.zoomLevel = Math.min(1.5, Math.round((this.zoomLevel + 0.1) * 10) / 10);
             this.applyZoom();
         });
 
         document.getElementById('zoomOutBtn')?.addEventListener('click', () => {
-            this.zoomLevel = Math.max(0.4, this.zoomLevel - 0.1);
+            this.zoomLevel = Math.max(0.4, Math.round((this.zoomLevel - 0.1) * 10) / 10);
             this.applyZoom();
         });
 
@@ -175,9 +175,9 @@ class QuotationBuilder {
         document.getElementById('zoomFitBtn')?.addEventListener('click', () => {
             const viewport = document.querySelector('.preview-viewport');
             if (viewport) {
-                const availableWidth = viewport.clientWidth - 60;
+                const availableWidth = viewport.clientWidth - 48;
                 // A4 width in px is ~794px
-                this.zoomLevel = Math.min(1.0, availableWidth / 800);
+                this.zoomLevel = Math.max(0.4, Math.min(1.2, Math.round((availableWidth / 800) * 100) / 100));
                 this.applyZoom();
             }
         });
@@ -185,14 +185,40 @@ class QuotationBuilder {
         document.getElementById('pageNavSelect')?.addEventListener('change', (e) => {
             const pageId = e.target.value;
             const el = document.getElementById(pageId);
-            if (el) el.scrollIntoView({ behavior: 'smooth' });
+            const viewport = document.querySelector('.preview-viewport');
+            if (el && viewport) {
+                const targetScroll = el.offsetTop * this.zoomLevel;
+                viewport.scrollTo({ top: Math.max(0, targetScroll - 16), behavior: 'smooth' });
+            }
         });
+
+        // Auto-fit on load if viewport is narrower than 850px
+        setTimeout(() => {
+            const viewport = document.querySelector('.preview-viewport');
+            if (viewport && viewport.clientWidth < 850) {
+                document.getElementById('zoomFitBtn')?.click();
+            } else {
+                this.applyZoom();
+            }
+        }, 150);
     }
 
     applyZoom() {
         const container = document.getElementById('a4PaperContainer');
+        const wrapper = document.getElementById('a4ScaleWrapper') || container?.parentElement;
         if (container) {
             container.style.transform = `scale(${this.zoomLevel})`;
+            container.style.transformOrigin = 'top center';
+
+            // Crucial fix: CSS transform scales the visual element but does not alter the layout box.
+            // By constraining wrapper's height and width to scaled dimensions, we eliminate all phantom empty scroll space!
+            const unscaledHeight = container.scrollHeight || 3360;
+            const unscaledWidth = container.offsetWidth || 794;
+            if (wrapper && wrapper.id === 'a4ScaleWrapper') {
+                wrapper.style.height = `${Math.ceil(unscaledHeight * this.zoomLevel) + 24}px`;
+                wrapper.style.width = `${Math.ceil(unscaledWidth * this.zoomLevel)}px`;
+            }
+
             const label = document.getElementById('zoomLabel');
             if (label) label.textContent = `${Math.round(this.zoomLevel * 100)}%`;
         }
@@ -826,6 +852,8 @@ class QuotationBuilder {
                 </div>
             </div>
         `;
+
+        this.applyZoom();
     }
 
     triggerAutoSave() {

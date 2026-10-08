@@ -8,10 +8,11 @@
 </div> <!-- End app-layout -->
 
 <!-- Toast Notification Container -->
-<div id="toastContainer" style="position: fixed; bottom: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;"></div>
+<div id="toastContainer"></div>
 
-<!-- Core JavaScript Libraries -->
+<!-- Core JavaScript Libraries & UI Motion Engine -->
 <script src="<?= BASE_URL ?>/public/js/calculations.js?v=<?= APP_VERSION ?>"></script>
+<script src="<?= BASE_URL ?>/public/js/ui.js?v=<?= APP_VERSION ?>"></script>
 <script src="<?= BASE_URL ?>/public/js/app.js?v=<?= APP_VERSION ?>"></script>
 </body>
 </html>

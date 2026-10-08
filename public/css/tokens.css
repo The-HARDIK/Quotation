@@ -1,0 +1,188 @@
+/**
+ * Quotation Studio - Design System Tokens & Modern CSS Architecture
+ * Inspired by Linear, Stripe, and Vercel design standards.
+ */
+
+:root {
+    /* Color Palette - Light Theme (Default) */
+    --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+    /* Base Surfaces */
+    --bg-app: #f8fafc;
+    --bg-mesh: radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.04) 0px, transparent 50%),
+               radial-gradient(at 100% 0%, rgba(13, 92, 117, 0.05) 0px, transparent 50%),
+               radial-gradient(at 50% 100%, rgba(16, 185, 129, 0.03) 0px, transparent 50%);
+    --surface-card: #ffffff;
+    --surface-card-hover: #ffffff;
+    --surface-muted: #f1f5f9;
+    --surface-subtle: #f8fafc;
+    --surface-glass: rgba(255, 255, 255, 0.82);
+    --surface-glass-border: rgba(226, 232, 240, 0.8);
+
+    /* Text Colors */
+    --text-primary: #0f172a;
+    --text-secondary: #334155;
+    --text-muted: #64748b;
+    --text-subtle: #94a3b8;
+    --text-inverse: #ffffff;
+
+    /* Borders & Dividers */
+    --border-color: #e2e8f0;
+    --border-subtle: #f1f5f9;
+    --border-strong: #cbd5e1;
+    --border-focus: #0d5c75;
+
+    /* Brand Accent Colors */
+    --primary: #0d5c75;
+    --primary-hover: #083b4c;
+    --primary-light: #eff8fa;
+    --primary-glow: rgba(13, 92, 117, 0.25);
+    
+    --secondary: #85a438;
+    --secondary-hover: #6d862e;
+    --secondary-light: #f4f8ec;
+
+    --accent-indigo: #6366f1;
+    --accent-indigo-light: #eef2ff;
+
+    /* Semantic Status Colors */
+    --status-draft-bg: #f1f5f9;
+    --status-draft-text: #475569;
+    --status-draft-dot: #94a3b8;
+
+    --status-sent-bg: #e0f2fe;
+    --status-sent-text: #0369a1;
+    --status-sent-dot: #0284c7;
+
+    --status-viewed-bg: #f5f3ff;
+    --status-viewed-text: #6d28d9;
+    --status-viewed-dot: #7c3aed;
+
+    --status-accepted-bg: #ecfdf5;
+    --status-accepted-text: #047857;
+    --status-accepted-dot: #10b981;
+
+    --status-rejected-bg: #fef2f2;
+    --status-rejected-text: #b91c1c;
+    --status-rejected-dot: #ef4444;
+
+    --status-expired-bg: #fffbeb;
+    --status-expired-text: #b45309;
+    --status-expired-dot: #f59e0b;
+
+    --status-invoiced-bg: #eff6ff;
+    --status-invoiced-text: #1d4ed8;
+    --status-invoiced-dot: #2563eb;
+
+    /* Standard Alerts */
+    --success: #10b981;
+    --success-light: #ecfdf5;
+    --warning: #f59e0b;
+    --warning-light: #fffbeb;
+    --danger: #ef4444;
+    --danger-light: #fef2f2;
+    --info: #0284c7;
+    --info-light: #e0f2fe;
+
+    /* Radius Scale */
+    --radius-xs: 4px;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-full: 9999px;
+
+    /* Layered Shadows */
+    --shadow-xs: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
+    --shadow-sm: 0 2px 4px -1px rgba(15, 23, 42, 0.06), 0 1px 2px -1px rgba(15, 23, 42, 0.04);
+    --shadow-md: 0 6px 16px -4px rgba(15, 23, 42, 0.08), 0 2px 6px -2px rgba(15, 23, 42, 0.04);
+    --shadow-lg: 0 16px 32px -8px rgba(15, 23, 42, 0.12), 0 4px 12px -2px rgba(15, 23, 42, 0.05);
+    --shadow-xl: 0 24px 48px -12px rgba(15, 23, 42, 0.18);
+    --shadow-glow: 0 0 20px -3px var(--primary-glow);
+    --shadow-paper: 0 20px 45px -10px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.06);
+
+    /* Layout Dimensions */
+    --sidebar-width: 260px;
+    --sidebar-collapsed-width: 72px;
+    --topbar-height: 64px;
+
+    /* Animation Easing */
+    --ease-out-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-fast: 0.15s var(--ease-out-smooth);
+    --transition-base: 0.25s var(--ease-out-smooth);
+    --transition-slow: 0.4s var(--ease-out-smooth);
+
+    /* Z-Indices */
+    --z-sidebar: 100;
+    --z-topbar: 90;
+    --z-dropdown: 500;
+    --z-drawer: 800;
+    --z-modal: 1000;
+    --z-toast: 1500;
+    --z-spotlight: 2000;
+}
+
+/* Dark Theme Overrides */
+[data-theme="dark"] {
+    --bg-app: #090d16;
+    --bg-mesh: radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.12) 0px, transparent 55%),
+               radial-gradient(at 100% 0%, rgba(13, 92, 117, 0.15) 0px, transparent 55%),
+               radial-gradient(at 50% 100%, rgba(16, 185, 129, 0.06) 0px, transparent 50%);
+    --surface-card: #0f172a;
+    --surface-card-hover: #141f36;
+    --surface-muted: #1e293b;
+    --surface-subtle: #0c1322;
+    --surface-glass: rgba(15, 23, 42, 0.85);
+    --surface-glass-border: rgba(51, 65, 85, 0.7);
+
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+    --text-subtle: #64748b;
+    --text-inverse: #0f172a;
+
+    --border-color: #1e293b;
+    --border-subtle: #141f36;
+    --border-strong: #334155;
+    --border-focus: #38bdf8;
+
+    --primary-light: rgba(13, 92, 117, 0.25);
+    --primary-glow: rgba(56, 189, 248, 0.35);
+
+    --status-draft-bg: #1e293b;
+    --status-draft-text: #94a3b8;
+    --status-draft-dot: #64748b;
+
+    --status-sent-bg: rgba(2, 132, 199, 0.18);
+    --status-sent-text: #38bdf8;
+    --status-sent-dot: #0284c7;
+
+    --status-viewed-bg: rgba(124, 58, 237, 0.18);
+    --status-viewed-text: #a78bfa;
+    --status-viewed-dot: #8b5cf6;
+
+    --status-accepted-bg: rgba(16, 185, 129, 0.18);
+    --status-accepted-text: #34d399;
+    --status-accepted-dot: #10b981;
+
+    --status-rejected-bg: rgba(239, 68, 68, 0.18);
+    --status-rejected-text: #f87171;
+    --status-rejected-dot: #ef4444;
+
+    --status-expired-bg: rgba(245, 158, 11, 0.18);
+    --status-expired-text: #fbbf24;
+    --status-expired-dot: #f59e0b;
+
+    --status-invoiced-bg: rgba(37, 99, 235, 0.18);
+    --status-invoiced-text: #60a5fa;
+    --status-invoiced-dot: #3b82f6;
+
+    --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+    --shadow-sm: 0 2px 4px -1px rgba(0, 0, 0, 0.5);
+    --shadow-md: 0 6px 16px -4px rgba(0, 0, 0, 0.6);
+    --shadow-lg: 0 16px 32px -8px rgba(0, 0, 0, 0.7);
+    --shadow-xl: 0 24px 48px -12px rgba(0, 0, 0, 0.85);
+}

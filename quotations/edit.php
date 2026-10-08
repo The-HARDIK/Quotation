@@ -471,8 +471,10 @@ include __DIR__ . '/../includes/header.php';
         </div>
 
         <div class="preview-viewport">
-            <div class="a4-paper-container" id="a4PaperContainer">
-                <!-- Dynamically populated 3 pages via quotation-builder.js -->
+            <div class="preview-scale-wrapper" id="a4ScaleWrapper">
+                <div class="a4-paper-container" id="a4PaperContainer">
+                    <!-- Dynamically populated 3 pages via quotation-builder.js -->
+                </div>
             </div>
         </div>
     </div>
