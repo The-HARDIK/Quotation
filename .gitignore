@@ -1,0 +1,17 @@
+# Dependencies
+/vendor/
+composer.phar
+
+# Environment & Temp Files
+.env
+*.log
+test_verify.php
+setup_php_ini.py
+test_cookies.txt
+test_reports.php
+
+# OS & IDE
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

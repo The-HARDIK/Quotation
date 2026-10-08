@@ -1,0 +1,8 @@
+.git
+.gitignore
+composer.phar
+setup_php_ini.py
+test_verify.php
+test_reports.php
+test_cookies.txt
+*.log

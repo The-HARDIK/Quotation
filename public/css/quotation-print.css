@@ -1,0 +1,81 @@
+/**
+ * Quotation Studio - High-Fidelity A4 Print & PDF Stylesheet
+ */
+
+@page {
+    size: A4 portrait;
+    margin: 10mm 12mm 10mm 12mm;
+}
+
+@media print {
+    body, html {
+        background: #ffffff !important;
+        color: #000000 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        font-size: 11pt !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* Hide web app UI elements */
+    .sidebar,
+    .topbar,
+    .builder-editor-panel,
+    .preview-toolbar,
+    .btn,
+    .page-break-tag,
+    .page-actions,
+    .no-print {
+        display: none !important;
+    }
+
+    .app-main,
+    .content-wrapper,
+    .builder-layout,
+    .builder-preview-panel,
+    .preview-viewport,
+    .a4-paper-container {
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
+        background: #ffffff !important;
+        width: 100% !important;
+        height: auto !important;
+        transform: none !important;
+    }
+
+    .a4-page {
+        box-shadow: none !important;
+        border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        min-height: 275mm !important;
+        page-break-after: always !important;
+        break-after: page !important;
+    }
+
+    .a4-page:last-child {
+        page-break-after: auto !important;
+        break-after: auto !important;
+    }
+
+    table {
+        page-break-inside: auto;
+    }
+
+    tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+    }
+
+    thead {
+        display: table-header-group;
+    }
+
+    tfoot {
+        display: table-footer-group;
+    }
+}

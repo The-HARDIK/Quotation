@@ -1,0 +1,477 @@
+/**
+ * Quotation Studio - Two-Panel Interactive Quotation Builder & A4 Live Preview
+ */
+
+.builder-layout {
+    display: grid;
+    grid-template-columns: 520px 1fr;
+    gap: 24px;
+    height: calc(100vh - var(--topbar-height) - 40px);
+    margin-top: -10px;
+}
+
+@media (min-width: 1600px) {
+    .builder-layout {
+        grid-template-columns: 600px 1fr;
+    }
+}
+
+@media (max-width: 1200px) {
+    .builder-layout {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+}
+
+/* LEFT PANEL: Form Editor */
+.builder-editor-panel {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.builder-panel-header {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8fafc;
+}
+
+.builder-tabs {
+    display: flex;
+    overflow-x: auto;
+    background: #ffffff;
+    border-bottom: 1px solid var(--border-color);
+    padding: 0 10px;
+    gap: 4px;
+}
+
+.builder-tab-btn {
+    padding: 12px 14px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text-muted);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    transition: all 0.15s ease;
+}
+
+.builder-tab-btn:hover {
+    color: var(--primary);
+}
+
+.builder-tab-btn.active {
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+    background: var(--primary-light);
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+}
+
+.builder-editor-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.builder-footer {
+    padding: 14px 20px;
+    border-top: 1px solid var(--border-color);
+    background: #f8fafc;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.autosave-status {
+    font-size: 12px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.autosave-status.saved { color: var(--success); }
+.autosave-status.saving { color: var(--warning); }
+
+/* Line Items Table in Editor */
+.items-editor-card {
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    margin-bottom: 16px;
+    background: #ffffff;
+    overflow: hidden;
+}
+
+.item-row {
+    padding: 14px;
+    border-bottom: 1px solid var(--border-color);
+    background: #ffffff;
+    position: relative;
+    transition: background 0.15s ease;
+}
+
+.item-row:last-child {
+    border-bottom: none;
+}
+
+.item-row-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.item-row-number {
+    font-weight: 700;
+    font-size: 12px;
+    background: var(--bg-alt);
+    padding: 2px 8px;
+    border-radius: 4px;
+    color: var(--text-secondary);
+}
+
+.item-row-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.item-grid-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.item-grid-cols-4 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 8px;
+}
+
+/* RIGHT PANEL: Live A4 Preview */
+.builder-preview-panel {
+    background: #475569;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    position: relative;
+}
+
+.preview-toolbar {
+    padding: 10px 18px;
+    background: #1e293b;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 20;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.preview-toolbar-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.toolbar-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    border: none;
+    padding: 6px 10px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.15s ease;
+}
+
+.toolbar-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.preview-viewport {
+    flex: 1;
+    overflow: auto;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #64748b;
+    position: relative;
+}
+
+/* Page boundaries & A4 Paper Dimensions */
+.a4-paper-container {
+    transform-origin: top center;
+    transition: transform 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.a4-page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 15mm 16mm 18mm;
+    background: #ffffff;
+    box-shadow: var(--shadow-paper);
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    color: #1e293b;
+    font-size: 12.5px;
+    line-height: 1.5;
+}
+
+.page-break-tag {
+    position: absolute;
+    top: -22px;
+    right: 0;
+    font-size: 11px;
+    color: #cbd5e1;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+/* Proposal Structure Replicating Uploaded DOCX */
+.proposal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #0d5c75;
+}
+
+.proposal-brand-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.proposal-logo-main {
+    max-height: 48px;
+    max-width: 180px;
+    object-fit: contain;
+}
+
+.proposal-brand-badges {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.proposal-partner-logo {
+    max-height: 40px;
+    max-width: 100px;
+    object-fit: contain;
+}
+
+.proposal-meta-grid {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.proposal-recipient-box {
+    margin-bottom: 14px;
+    background: #f8fafc;
+    border-left: 3px solid #0d5c75;
+    padding: 8px 12px;
+    font-size: 12px;
+}
+
+.proposal-subject-line {
+    font-weight: 700;
+    font-size: 13.5px;
+    margin-bottom: 12px;
+    color: #0f172a;
+    text-decoration: underline;
+}
+
+.proposal-intro-letter {
+    margin-bottom: 14px;
+    text-align: justify;
+    line-height: 1.55;
+    font-size: 12px;
+}
+
+.proposal-intro-letter p {
+    margin-bottom: 8px;
+}
+
+.capabilities-list {
+    margin: 8px 0 12px 18px;
+    list-style-type: square;
+    font-size: 12px;
+}
+
+.capabilities-list li {
+    margin-bottom: 4px;
+}
+
+/* Commercial Proposal Table in Proposal */
+.commercial-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 16px;
+    font-size: 11.5px;
+}
+
+.commercial-table th {
+    background: #0d5c75;
+    color: #ffffff;
+    font-weight: 700;
+    padding: 8px 10px;
+    text-align: left;
+    border: 1px solid #0d5c75;
+}
+
+.commercial-table td {
+    padding: 8px 10px;
+    border: 1px solid #cbd5e1;
+    vertical-align: top;
+}
+
+.commercial-table tr:nth-child(even) td {
+    background: #f8fafc;
+}
+
+.commercial-table .amount-col {
+    text-align: right;
+    white-space: nowrap;
+    font-weight: 600;
+}
+
+.scope-box {
+    background: #f1f5f9;
+    padding: 10px 14px;
+    border-radius: 4px;
+    margin-bottom: 14px;
+    font-size: 11.5px;
+}
+
+.scope-box h4 {
+    font-size: 12px;
+    color: #0d5c75;
+    margin-bottom: 6px;
+    font-weight: 700;
+}
+
+.scope-box ul {
+    margin-left: 16px;
+}
+
+.scope-box li {
+    margin-bottom: 3px;
+}
+
+.sys-req-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 14px;
+    font-size: 11px;
+}
+
+.sys-req-table td {
+    padding: 5px 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.sys-req-table td.key {
+    background: #f8fafc;
+    font-weight: 700;
+    width: 30%;
+}
+
+/* Page 3 Terms & Signature */
+.terms-ordered-list {
+    margin-left: 18px;
+    margin-bottom: 16px;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.terms-ordered-list li {
+    margin-bottom: 5px;
+}
+
+.bank-info-box {
+    background: #f8fafc;
+    border: 1px dashed #94a3b8;
+    padding: 10px 14px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    font-size: 11.5px;
+}
+
+.signature-block {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.signature-card {
+    min-width: 220px;
+    text-align: left;
+    font-size: 11.5px;
+}
+
+.signature-image {
+    max-height: 50px;
+    margin-bottom: 6px;
+}
+
+/* Footer Banner on Proposal */
+.proposal-footer-banner {
+    margin-top: auto;
+    padding-top: 10px;
+    border-top: 2px solid #85a438;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 10.5px;
+    color: #475569;
+}
+
+.footer-qr-img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
