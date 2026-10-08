@@ -18,36 +18,44 @@ if ($uri === '/' || $uri === '/index.php') {
     exit;
 }
 
-// 2. Direct static file handling (fallback if not served by Vercel static route)
-$targetPath = $root . $uri;
+// 2. Static file handling (handles /public/css/..., /css/..., /js/..., /assets/...)
+$mimes = [
+    'css' => 'text/css; charset=UTF-8',
+    'js' => 'application/javascript; charset=UTF-8',
+    'json' => 'application/json; charset=UTF-8',
+    'png' => 'image/png',
+    'jpg' => 'image/jpeg',
+    'jpeg' => 'image/jpeg',
+    'gif' => 'image/gif',
+    'svg' => 'image/svg+xml',
+    'ico' => 'image/x-icon',
+    'webp' => 'image/webp',
+    'pdf' => 'application/pdf',
+    'woff' => 'font/woff',
+    'woff2' => 'font/woff2',
+    'ttf' => 'font/ttf'
+];
 
-if (str_starts_with($uri, '/public/') && file_exists($targetPath) && is_file($targetPath)) {
-    $ext = strtolower(pathinfo($targetPath, PATHINFO_EXTENSION));
-    $mimes = [
-        'css' => 'text/css; charset=UTF-8',
-        'js' => 'application/javascript; charset=UTF-8',
-        'json' => 'application/json; charset=UTF-8',
-        'png' => 'image/png',
-        'jpg' => 'image/jpeg',
-        'jpeg' => 'image/jpeg',
-        'gif' => 'image/gif',
-        'svg' => 'image/svg+xml',
-        'ico' => 'image/x-icon',
-        'webp' => 'image/webp',
-        'pdf' => 'application/pdf',
-        'woff' => 'font/woff',
-        'woff2' => 'font/woff2',
-        'ttf' => 'font/ttf'
-    ];
-    if (isset($mimes[$ext])) {
-        header('Content-Type: ' . $mimes[$ext]);
-        header('Cache-Control: public, max-age=86400');
-        readfile($targetPath);
-        exit;
+$possibleStaticPaths = [
+    $root . $uri,
+    $root . '/public' . $uri
+];
+
+foreach ($possibleStaticPaths as $staticCandidate) {
+    if (file_exists($staticCandidate) && is_file($staticCandidate)) {
+        $ext = strtolower(pathinfo($staticCandidate, PATHINFO_EXTENSION));
+        if (isset($mimes[$ext])) {
+            header('Content-Type: ' . $mimes[$ext]);
+            header('Cache-Control: public, max-age=86400');
+            readfile($staticCandidate);
+            exit;
+        }
     }
 }
 
-// 3. Direct PHP file execution (e.g., /login.php, /quotations/create.php, /api/customer.php)
+// 3. Direct PHP file execution (e.g., /login.php, /quotations/create.php, /public/quotation.php, /api/customer.php)
+$targetPath = $root . $uri;
+
 if (file_exists($targetPath) && is_file($targetPath) && str_ends_with($targetPath, '.php')) {
     $_SERVER['SCRIPT_NAME'] = $uri;
     $_SERVER['PHP_SELF'] = $uri;
