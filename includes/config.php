@@ -12,7 +12,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 // Application Constants
 define('APP_NAME', 'Quotation Studio');
-define('APP_VERSION', '1.0.1');
+define('APP_VERSION', '1.0.3');
 define('APP_TAGLINE', 'Enterprise Quotation & Commercial Proposal Management');
 
 // Base Paths
