@@ -1,6 +1,6 @@
 /**
  * Quotation Studio - UI & Motion Interaction Engine
- * Handles Theme, Command Palette, Count-Up Animations, Modals, Toasts & Tooltips
+ * Clean, Robust SaaS Experience (No DOM-bloating ripples, Full Dark/Light Theme)
  */
 
 class UIEngine {
@@ -10,7 +10,6 @@ class UIEngine {
         this.initCommandPalette();
         this.initCountUp();
         this.initModals();
-        this.initButtonEffects();
         this.initTableEffects();
     }
 
@@ -18,6 +17,7 @@ class UIEngine {
     // 1. Theme Management (Light / Dark)
     // ==========================================
     static initTheme() {
+        // Read theme from localStorage or system preference
         const savedTheme = localStorage.getItem('qs_theme') || 'light';
         document.documentElement.setAttribute('data-theme', savedTheme);
         this.updateThemeIcon(savedTheme);
@@ -28,8 +28,12 @@ class UIEngine {
             document.documentElement.setAttribute('data-theme', next);
             localStorage.setItem('qs_theme', next);
             this.updateThemeIcon(next);
+            
+            // Dispatch event for any charts or components to re-render colors
+            window.dispatchEvent(new CustomEvent('themeChanged', { detail: { theme: next } }));
+            
             if (window.showToast) {
-                window.showToast(`Switched to ${next} mode`, 'info');
+                window.showToast(`Switched to ${next} theme`, 'info', 2000);
             }
         });
     }
@@ -44,35 +48,38 @@ class UIEngine {
     }
 
     // ==========================================
-    // 2. Sidebar Collapsible & Mobile Drawer
+    // 2. Single Unified Sidebar Toggle (Mobile Drawer & Desktop Collapse)
     // ==========================================
     static initSidebar() {
         const sidebar = document.getElementById('appSidebar');
         const layout = document.querySelector('.app-layout');
-        const collapseBtn = document.getElementById('sidebarCollapseToggle');
-        const mobileToggle = document.getElementById('sidebarToggle');
+        const toggleBtn = document.getElementById('sidebarToggle');
 
-        // Restore collapsed state
+        // Restore collapsed state on desktop
         const isCollapsed = localStorage.getItem('qs_sidebar_collapsed') === 'true';
-        if (isCollapsed && sidebar && layout) {
+        if (isCollapsed && sidebar && layout && window.innerWidth > 900) {
             sidebar.classList.add('collapsed');
             layout.classList.add('sidebar-collapsed');
         }
 
-        collapseBtn?.addEventListener('click', () => {
-            if (!sidebar || !layout) return;
-            const collapsed = sidebar.classList.toggle('collapsed');
-            layout.classList.toggle('sidebar-collapsed', collapsed);
-            localStorage.setItem('qs_sidebar_collapsed', collapsed ? 'true' : 'false');
-        });
-
-        mobileToggle?.addEventListener('click', (e) => {
+        toggleBtn?.addEventListener('click', (e) => {
             e.stopPropagation();
-            sidebar?.classList.toggle('open');
+            if (!sidebar || !layout) return;
+
+            if (window.innerWidth <= 900) {
+                // Mobile: Open/close off-canvas drawer
+                sidebar.classList.toggle('open');
+            } else {
+                // Desktop: Toggle between full & icon-only compact sidebar
+                const collapsed = sidebar.classList.toggle('collapsed');
+                layout.classList.toggle('sidebar-collapsed', collapsed);
+                localStorage.setItem('qs_sidebar_collapsed', collapsed ? 'true' : 'false');
+            }
         });
 
+        // Close mobile drawer when clicking outside
         document.addEventListener('click', (e) => {
-            if (sidebar?.classList.contains('open') && !sidebar.contains(e.target) && !mobileToggle?.contains(e.target)) {
+            if (sidebar?.classList.contains('open') && !sidebar.contains(e.target) && !toggleBtn?.contains(e.target)) {
                 sidebar.classList.remove('open');
             }
         });
@@ -87,9 +94,8 @@ class UIEngine {
         const results = document.getElementById('commandPaletteResults');
         if (!backdrop || !input || !results) return;
 
-        // Open shortcut
         window.addEventListener('keydown', (e) => {
-            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+            if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
                 e.preventDefault();
                 UIEngine.openCommandPalette();
             }
@@ -106,7 +112,6 @@ class UIEngine {
             if (e.target === backdrop) UIEngine.closeCommandPalette();
         });
 
-        // Search filtering inside Command Palette
         input.addEventListener('input', (e) => {
             const query = e.target.value.toLowerCase().trim();
             const items = results.querySelectorAll('.command-item');
@@ -148,7 +153,7 @@ class UIEngine {
                     const prefix = el.getAttribute('data-prefix') || '';
                     const suffix = el.getAttribute('data-suffix') || '';
                     const decimals = parseInt(el.getAttribute('data-decimals') || '0', 10);
-                    UIEngine.animateValue(el, 0, target, 1200, prefix, suffix, decimals);
+                    UIEngine.animateValue(el, 0, target, 1000, prefix, suffix, decimals);
                     obs.unobserve(el);
                 }
             });
@@ -176,33 +181,12 @@ class UIEngine {
     }
 
     // ==========================================
-    // 5. Button Micro-Interactions & Modals
+    // 5. Table Hover & Modals
     // ==========================================
-    static initButtonEffects() {
-        document.querySelectorAll('.btn').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                // Ripple effect
-                const ripple = document.createElement('span');
-                ripple.className = 'btn-ripple';
-                const rect = this.getBoundingClientRect();
-                const size = Math.max(rect.width, rect.height);
-                ripple.style.width = ripple.style.height = `${size}px`;
-                ripple.style.left = `${e.clientX - rect.left - size/2}px`;
-                ripple.style.top = `${e.clientY - rect.top - size/2}px`;
-                this.appendChild(ripple);
-                setTimeout(() => ripple.remove(), 600);
-            });
-        });
-    }
-
     static initTableEffects() {
         document.querySelectorAll('.table tbody tr').forEach(row => {
-            row.addEventListener('mouseenter', () => {
-                row.classList.add('row-hover');
-            });
-            row.addEventListener('mouseleave', () => {
-                row.classList.remove('row-hover');
-            });
+            row.addEventListener('mouseenter', () => row.classList.add('row-hover'));
+            row.addEventListener('mouseleave', () => row.classList.remove('row-hover'));
         });
     }
 
@@ -262,16 +246,8 @@ class UIEngine {
 
             modal.classList.add('active');
 
-            const onConfirm = () => {
-                cleanup();
-                resolve(true);
-            };
-
-            const onCancel = () => {
-                cleanup();
-                resolve(false);
-            };
-
+            const onConfirm = () => { cleanup(); resolve(true); };
+            const onCancel = () => { cleanup(); resolve(false); };
             const cleanup = () => {
                 modal.classList.remove('active');
                 actBtn.removeEventListener('click', onConfirm);
@@ -284,8 +260,8 @@ class UIEngine {
     }
 }
 
-// Global Toast System with Animated Progress Bar
-window.showToast = function(message, type = 'success', duration = 3500) {
+// Global Toast System
+window.showToast = function(message, type = 'success', duration = 3000) {
     let container = document.getElementById('toastContainer');
     if (!container) {
         container = document.createElement('div');

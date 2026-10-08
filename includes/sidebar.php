@@ -1,6 +1,6 @@
 <?php
 /**
- * Quotation Studio - Sidebar Navigation (Collapsible & Modernized)
+ * Quotation Studio - Sidebar Navigation (Clean & Professional)
  */
 $activeNav = $activeNav ?? 'dashboard';
 ?>
@@ -95,20 +95,7 @@ $activeNav = $activeNav ?? 'dashboard';
         </li>
     </ul>
 
-    <!-- Pro Subscription Status Card -->
-    <div class="sidebar-pro-card">
-        <strong>Enterprise Pro</strong>
-        <p>Unlimited proposals & automated GST engine active.</p>
-        <div class="sidebar-pro-progress">
-            <div class="sidebar-pro-progress-bar"></div>
-        </div>
-        <div style="font-size: 10.5px; color: #94a3b8; display: flex; justify-content: space-between;">
-            <span>Plan: Active</span>
-            <span>99.9% SLA</span>
-        </div>
-    </div>
-
-    <!-- Sidebar Footer -->
+    <!-- Sidebar Footer User Card -->
     <div class="sidebar-footer">
         <div class="user-avatar-mini">
             <?= strtoupper(substr($currentUser['name'] ?? 'A', 0, 1)) ?>

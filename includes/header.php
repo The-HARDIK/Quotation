@@ -19,6 +19,14 @@ $activeNav = $activeNav ?? 'dashboard';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= e($pageTitle) ?> — <?= APP_NAME ?></title>
 
+    <!-- Immediate Theme Application Script (Prevents flash of unstyled theme) -->
+    <script>
+        (function() {
+            const saved = localStorage.getItem('qs_theme') || 'light';
+            document.documentElement.setAttribute('data-theme', saved);
+        })();
+    </script>
+
     <!-- Google Fonts: Plus Jakarta Sans for UI + JetBrains Mono for Numbers/Codes -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -54,10 +62,8 @@ $activeNav = $activeNav ?? 'dashboard';
     <main class="app-main">
         <header class="topbar">
             <div class="topbar-left">
-                <button type="button" class="sidebar-toggle-btn" id="sidebarCollapseToggle" title="Collapse Sidebar (Desktop)">
-                    <i class="fas fa-bars-staggered"></i>
-                </button>
-                <button type="button" class="sidebar-toggle-btn d-md-none" id="sidebarToggle" title="Open Menu (Mobile)">
+                <!-- Single Unified Navigation Toggle (Collapses desktop, opens mobile) -->
+                <button type="button" class="sidebar-toggle-btn" id="sidebarToggle" title="Toggle Navigation">
                     <i class="fas fa-bars"></i>
                 </button>
 
@@ -70,24 +76,16 @@ $activeNav = $activeNav ?? 'dashboard';
             </div>
 
             <div class="topbar-right">
-                <!-- Theme Toggle Button -->
+                <!-- Theme Toggle Button (Light / Dark) -->
                 <button type="button" class="theme-toggle-btn" id="themeToggleBtn" title="Toggle Light / Dark Mode">
                     <i class="fas fa-moon"></i>
                 </button>
-
-                <!-- Notification Bell -->
-                <div style="position: relative;">
-                    <button type="button" class="notification-btn" id="notifBtn" title="Activity Notifications">
-                        <i class="fas fa-bell"></i>
-                        <span class="notification-badge-dot"></span>
-                    </button>
-                </div>
 
                 <a href="<?= BASE_URL ?>/quotations/create.php" class="btn btn-primary btn-sm">
                     <i class="fas fa-plus"></i> New Quotation
                 </a>
 
-                <!-- User Dropdown Menu -->
+                <!-- User Profile Dropdown -->
                 <div class="user-dropdown-wrapper" style="position: relative;">
                     <button type="button" class="btn btn-secondary btn-sm" id="userMenuBtn" style="border-radius: 9999px; padding: 4px 12px; gap: 8px;">
                         <span class="user-avatar-mini" style="width: 24px; height: 24px; font-size: 11px;">
